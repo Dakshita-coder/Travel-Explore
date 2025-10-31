@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Traveler Reviews</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="review-container">
+    <h2>Share Your Experience</h2>
+    <form id="reviewForm">
+      <input type="text" id="reviewName" placeholder="Your Name" required>
+      <textarea id="reviewText" placeholder="Write your review..." required></textarea>
+      <button type="submit" class="btn">Submit Review</button>
+    </form>
+
+    <h3>What People Say</h3>
+    <div id="reviewList"></div>
+  </div>
+
+  <script>
+    const reviews = JSON.parse(localStorage.getItem("reviews")) || [];
+
+    const reviewList = document.getElementById("reviewList");
+    const renderReviews = () => {
+      reviewList.innerHTML = reviews.map(r => `
+        <div class="review-box">
+          <p>"${r.text}"</p>
+          <h4>– ${r.name}</h4>
+        </div>
+      `).join("");
+    };
+    renderReviews();
+
+    document.getElementById("reviewForm").addEventListener("submit", e => {
+      e.preventDefault();
+      const name = document.getElementById("reviewName").value;
+      const text = document.getElementById("reviewText").value;
+      reviews.push({ name, text });
+      localStorage.setItem("reviews", JSON.stringify(reviews));
+      document.getElementById("reviewForm").reset();
+      renderReviews();
+    });
+  </script>
+</body>
+</html>

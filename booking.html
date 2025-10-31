@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Your Trip</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* GENERAL STYLES */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f3f4f6;
+      margin: 0;
+      padding: 0;
+    }
+    a { text-decoration: none; }
+
+    /* BOOKING CONTAINER */
+    .booking-container {
+      max-width: 500px;
+      margin: 80px auto;
+      background: white;
+      padding: 30px 25px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .booking-container h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #0077b6;
+    }
+    .booking-container input,
+    .booking-container textarea {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+    .booking-container input[readonly] {
+      background-color: #e5e7eb;
+      color: #111;
+      cursor: not-allowed;
+    }
+    .booking-container button {
+      width: 100%;
+      padding: 12px;
+      background-color: #0077b6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .booking-container button:hover {
+      background-color: #005f87;
+      transform: translateY(-2px);
+    }
+    @media (max-width: 480px) {
+      .booking-container {
+        margin: 50px 20px;
+        padding: 20px 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="booking-container">
+    <h2>Book Your Trip</h2>
+    <form id="bookingForm">
+      <input type="text" name="name" placeholder="Full Name" required>
+      <input type="email" name="email" placeholder="Email Address" required>
+      <input type="tel" name="phone" placeholder="Phone Number" required>
+      <input type="text" id="destination" name="destination" readonly>
+      <textarea name="message" rows="4" placeholder="Additional Message"></textarea>
+      <button type="submit">Submit Booking</button>
+    </form>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Read "destination" from URL parameters
+      const params = new URLSearchParams(window.location.search);
+      let dest = params.get("destination");
+
+      // Decode and validate
+      dest = dest ? decodeURIComponent(dest.trim()) : "";
+
+      const destInput = document.getElementById("destination");
+      destInput.value = dest || "Destination not specified";
+
+      // Handle form submission
+      const bookingForm = document.getElementById("bookingForm");
+      bookingForm.addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const name = this.name.value.trim();
+        const email = this.email.value.trim();
+        const phone = this.phone.value.trim();
+
+        if (!name || !email || !phone) {
+          alert("⚠ Please fill all required fields!");
+          return;
+        }
+
+        alert(`✅ Thank you, ${name}! Your booking request for "${destInput.value}" has been submitted successfully. We will contact you shortly.`);
+        
+        this.reset();
+        destInput.value = dest; // Keep destination visible
+      });
+    });
+    // Save booking to user profile
+const bookingForm = document.getElementById('bookingForm');
+if (bookingForm) {
+  bookingForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const user = JSON.parse(localStorage.getItem('user'));
+    const destination = document.getElementById('destination').value;
+    const date = document.getElementById('date').value;
+    
+    user.bookings.push(`${destination} on ${date}`);
+    localStorage.setItem('user', JSON.stringify(user));
+    alert('Booking added successfully!');
+    window.location.href = 'profile.html';
+  });
+}
+
+  </script>
+
+</body>
+</html>
